@@ -21,6 +21,9 @@ app.use(express.urlencoded({ limit: "10mb", extended: true }));
 
 // ============= Swagger 설정 =============
 const isSwaggerEnabled = process.env.SWAGGER_ENABLED === "true";
+
+console.log("SWAGGER_ENABLED:", process.env.SWAGGER_ENABLED);
+console.log("swagger route enabled:", isSwaggerEnabled);
 if (isSwaggerEnabled) {
   app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
