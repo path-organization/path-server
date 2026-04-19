@@ -6,6 +6,7 @@ export const ENV = {
   // Server
   NODE_ENV: process.env.NODE_ENV || "development",
   PORT: Number.parseInt(process.env.PORT || "3000", 10),
+  CORS_ORIGIN: process.env.CORS_ORIGIN || "",
 
   // Database - PostgreSQL
   PG_HOST: process.env.PG_HOST || "localhost",

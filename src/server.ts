@@ -10,14 +10,15 @@ const bootstrap = async () => {
   await initializeDatabase();
   await initializeRedis();
 
+  const allowedOrigins = ENV.CORS_ORIGIN.split(",") ?? [];
+
   app.use(
     cors({
-      origin: [
-        "http://localhost:5173",
-        "http://localhost:5174",
-        "http://localhost:3000",
-      ],
-      credentials: true,
+      origin: allowedOrigins,
+
+      methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+
+      allowedHeaders: ["Content-Type", "Authorization"],
     }),
   );
 
