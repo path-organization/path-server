@@ -1,5 +1,5 @@
-import { ChatMemoryRow } from "../types/entity/chat-memory.entity";
-import { CreateChatMemoryInput } from "../types/internal";
+import { ChatMemoryRow } from "../../types/entity/chat-memory.entity";
+import { CreateChatMemoryInput } from "../../types/internal";
 
 export interface IChatMemoryRepository {
   findMemoriesByRoomId(roomId: string): Promise<ChatMemoryRow[]>;
