@@ -10,7 +10,7 @@ export const createRagRouter = (ragController: IRagController): Router => {
     limits: {
       fileSize: 50 * 1024 * 1024,
     },
-    fileFilter: (req, file, cb) => {
+    fileFilter: (_req, file, cb) => {
       if (file.mimetype === "application/pdf") {
         cb(null, true);
       } else {

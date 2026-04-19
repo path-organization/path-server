@@ -1,8 +1,5 @@
 import { Response } from "express";
-import {
-  ApiResponse,
-  AuthenticatedRequest,
-} from "../../types/dto/response/basic.response";
+import { ApiResponse, AuthenticatedRequest } from "../../../types/dto/response/basic.response";
 
 export interface IAuthController {
   signUp(

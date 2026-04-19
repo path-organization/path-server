@@ -1,5 +1,6 @@
-import { ChatMessageRow } from "../types/entity/chat-message.entity";
-import { CreateChatMessageInput } from "../types/internal";
+import { ChatMessageRow } from "../../types/entity/chat-message.entity";
+import { CreateChatMessageInput } from "../../types/internal";
+
 
 export interface IChatMessageRepository {
   findMessagesByRoomId(roomId: string): Promise<ChatMessageRow[]>;
