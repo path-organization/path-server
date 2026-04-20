@@ -7,7 +7,7 @@ export interface IFinancialService {
     input: {
       targetAmount: number;
       netMonthlyIncome: number;
-      monthlyFixedExpenses: { money: string }[];
+      monthlyFixedExpenses: { name: string; money: number }[];
     },
   ): Promise<void>;
 
