@@ -22,9 +22,9 @@ export class FinancialRepository implements IFinancialRepository {
     try {
       const result = await this.db.query<FinancialGoalRow>(
         `INSERT INTO financial_goals 
-          (id, user_id, name, description, target_amount, current_amount, monthly_contribution, start_date, end_date, created_at, updated_at)
-         VALUES (gen_random_uuid(), $1, $2, $3, $4, $5, $6, $7, $8, NOW(), NOW())
-         RETURNING *`,
+        (id, user_id, name, description, target_amount, current_amount, monthly_contribution, start_date, end_date, created_at, updated_at)
+       VALUES (gen_random_uuid(), $1, $2, $3, $4, $5, $6, $7, $8, NOW(), NOW())
+       RETURNING *`,
         [
           userId,
           "기본계획",
@@ -66,6 +66,7 @@ export class FinancialRepository implements IFinancialRepository {
       monthlyFixedExpenses,
       monthlyFixedExpensesAmount,
     );
+
     try {
       const monthlySavingsInvestment = {
         amount: netMonthlyIncome - monthlyFixedExpensesAmount,
@@ -74,14 +75,14 @@ export class FinancialRepository implements IFinancialRepository {
 
       const result = await this.db.query(
         `INSERT INTO financial_statements 
-    (user_id, net_monthly_income, monthly_fixed_expenses, monthly_savings_investment, info)
-   VALUES ($1, $2, $3, $4, $5)
-   RETURNING *`,
+        (user_id, net_monthly_income, monthly_fixed_expenses, monthly_savings_investment, info)
+       VALUES ($1, $2, $3, $4, $5)
+       RETURNING *`,
         [
           userId,
           netMonthlyIncome,
-          monthlyFixedExpenses,
-          monthlySavingsInvestment,
+          JSON.stringify(monthlyFixedExpenses),
+          JSON.stringify(monthlySavingsInvestment),
           "첫 재무제표 입니다. 자동생성이기에 상세 정보는 없습니다.",
         ],
       );
@@ -161,12 +162,12 @@ export class FinancialRepository implements IFinancialRepository {
     }
   }
 
-  // 유저가 직접 재무제표 업데이트 (부분 업데이트 허용)
   async updateLatestStatement(
     userId: string,
     input: FinancialStatementInput,
   ): Promise<void> {
     console.log("updateLatestStatement 전달 값", input);
+
     const fields: string[] = [];
     const values: any[] = [];
     let index = 1;
@@ -177,33 +178,30 @@ export class FinancialRepository implements IFinancialRepository {
     }
 
     if (input.monthly_fixed_expenses !== undefined) {
-      fields.push(`monthly_fixed_expenses = $${index++}::jsonb`);
-      values.push(JSON.stringify(input.monthly_fixed_expenses));
+      fields.push(`monthly_fixed_expenses = $${index++}`);
+      values.push(input.monthly_fixed_expenses);
     }
 
     if (input.monthly_savings_investment !== undefined) {
-      fields.push(`monthly_savings_investment = $${index++}::jsonb`);
-      values.push(JSON.stringify(input.monthly_savings_investment));
+      fields.push(`monthly_savings_investment = $${index++}`);
+      values.push(input.monthly_savings_investment);
     }
 
     if (!fields.length) return;
-    console.log("fields", fields);
+
     values.push(userId);
 
-    console.log("values before query", values);
-    console.log("typeof", typeof values[1], Array.isArray(values[1]));
-    console.log("first item type", typeof values[1]?.[0]);
     await this.db.query(
       `
-    UPDATE financial_statements
-    SET ${fields.join(", ")}, updated_at = NOW()
-    WHERE id = (
-      SELECT id FROM financial_statements
-      WHERE user_id = $${index}
-      ORDER BY created_at DESC
-      LIMIT 1
-    )
-    `,
+      UPDATE financial_statements
+      SET ${fields.join(", ")}, updated_at = NOW()
+      WHERE id = (
+        SELECT id FROM financial_statements
+        WHERE user_id = $${index}
+        ORDER BY created_at DESC
+        LIMIT 1
+      )
+      `,
       values,
     );
   }

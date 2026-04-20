@@ -17,6 +17,7 @@ export class FinancialService implements IFinancialService {
       monthlyFixedExpenses: { name: string; money: number }[];
     },
   ): Promise<void> {
+    console.log(typeof input.monthlyFixedExpenses, input.monthlyFixedExpenses);
     const fixedExpensesTotal = input.monthlyFixedExpenses.reduce(
       (sum, expense) => sum + expense.money,
       0,
