@@ -5,7 +5,7 @@ import { z } from "zod";
  */
 export const ExpenseItemSchema = z.object({
   name: z.string().min(1, "지출 항목명은 필수입니다"),
-  money: z.string().regex(/^\d+(\.\d{1,2})?$/, "숫자 형식으로 입력해주세요"),
+  money: z.number().positive("금액은 0보다 커야 합니다"),
 });
 
 export type ExpenseItem = z.infer<typeof ExpenseItemSchema>;
