@@ -21,7 +21,7 @@ export const authPaths = {
                     type: "object",
                     properties: {
                       name: { type: "string" },
-                      money: { type: "string" }, // 숫자 형식 문자열
+                      money: { type: "number" },
                     },
                     required: ["name", "money"],
                   },
