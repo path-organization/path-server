@@ -14,11 +14,11 @@ export class FinancialService implements IFinancialService {
     input: {
       targetAmount: number;
       netMonthlyIncome: number;
-      monthlyFixedExpenses: { money: string }[];
+      monthlyFixedExpenses: { name: string; money: number }[];
     },
   ): Promise<void> {
     const fixedExpensesTotal = input.monthlyFixedExpenses.reduce(
-      (sum, expense) => sum + Number.parseFloat(expense.money),
+      (sum, expense) => sum + expense.money,
       0,
     );
 
