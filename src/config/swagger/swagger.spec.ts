@@ -11,13 +11,19 @@ import {
   fsChatSchemas,
 } from "../../modules/chat/swagger.fs-chat.paths";
 
-// 다른 모듈 추가 예시
-// import { userPaths, userSchemas } from "../../user/swaggerUserPaths";
-// import { conceptPaths, conceptSchemas } from "../../concepts/swaggerConceptPaths";
+// env 기반 서버 URL (fallback: localhost)
+const serverUrl = process.env.SWAGGER_SERVER_URL || "http://localhost:3000";
 
 export const swaggerSpec = {
   ...swaggerBase,
-  // 기존 paths에 다른 모듈 paths 합치기
+
+  // 핵심: Swagger UI가 실제 호출할 서버 정의
+  servers: [
+    {
+      url: serverUrl,
+    },
+  ],
+
   paths: {
     ...swaggerBase.paths,
     ...authPaths,
@@ -25,12 +31,10 @@ export const swaggerSpec = {
     ...conceptPaths,
     ...chatPaths,
     ...fsChatPaths,
-    // ...userPaths,         // User 모듈 추가 시
-    // ...conceptPaths,      // Concept 모듈 추가 시
   },
+
   components: {
     ...swaggerBase.components,
-    // 기존 schemas에 다른 모듈 schemas 합치기
     schemas: {
       ...swaggerBase.components.schemas,
       ...authSchemas,
@@ -38,8 +42,6 @@ export const swaggerSpec = {
       ...conceptSchemas,
       ...chatSchemas,
       ...fsChatSchemas,
-      // ...userSchemas,     // User 모듈 추가 시
-      // ...conceptSchemas,  // Concept 모듈 추가 시
     },
   },
 };
